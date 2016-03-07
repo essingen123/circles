@@ -7,6 +7,8 @@ module Model
 
 import Circle exposing (Circle)
 import Effects exposing (Effects)
+import List
+import List.Extra
 import Point exposing (Point)
 
 
@@ -71,4 +73,18 @@ tickCircles model =
   { model
   | circles = List.map Circle.tick model.circles
   }
+  |> findCollisions
 
+findCollisions : Model -> Model
+findCollisions model =
+  let
+    collisionTest a b =
+      a.id /= b.id && Circle.collisionTest a b
+    checkForCollisions circle =
+      if List.any (collisionTest circle) model.circles then
+        Circle.doCollision circle
+      else
+        circle
+    circles = List.map checkForCollisions model.circles
+  in
+    { model | circles = circles }

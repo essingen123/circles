@@ -33,9 +33,9 @@ view address model =
 viewCircle : Address Action -> Circle -> Svg
 viewCircle address circle =
     Svg.circle
-      [ fill "#ee3311"
+      [ fill "#0ef311"
       , opacity "0.5"
-      , stroke "#ff9999"
+      , stroke "#ffffff"
       , strokeWidth "1.5"
       , cx (toString circle.x)
       , cy (toString circle.y)
