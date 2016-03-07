@@ -30,3 +30,8 @@ main =
 port tasks : Signal (Task.Task Never ())
 port tasks =
   app.tasks
+
+
+port sounds : Signal String
+port sounds =
+  Model.soundSignal

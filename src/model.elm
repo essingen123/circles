@@ -3,9 +3,11 @@ module Model
   , Action (..)
   , init
   , update
+  , soundSignal
   ) where
 
 import Circle exposing (Circle)
+import Debug
 import Effects exposing (Effects)
 import List
 import List.Extra
@@ -17,12 +19,14 @@ type Action
   | RemoveCircle Int
   | Tick Float
   | Dimensions (Int, Int)
+  | Noop
 
 
 type alias Model =
   { circles : List Circle
   , nextId : Int
   , dimensions : Point
+  , sounds : List String
   }
 
 
@@ -31,6 +35,7 @@ defaultModel =
   { circles = []
   , nextId = 0
   , dimensions = Point.defaultPoint
+  , sounds = []
   }
 
 
@@ -46,8 +51,8 @@ update action model =
       RemoveCircle id -> removeCircle id model
       Tick _ -> tickCircles model
       Dimensions (w, h) -> { model | dimensions = { x = w, y = h } }
-  , Effects.none
-  )
+      Noop -> model
+  ) |> triggerSounds
 
 
 addCircle : (Int, Int) -> Model -> Model
@@ -75,16 +80,80 @@ tickCircles model =
   }
   |> findCollisions
 
+
 findCollisions : Model -> Model
 findCollisions model =
   let
-    collisionTest a b =
-      a.id /= b.id && Circle.collisionTest a b
-    checkForCollisions circle =
-      if List.any (collisionTest circle) model.circles then
-        Circle.doCollision circle
-      else
-        circle
-    circles = List.map checkForCollisions model.circles
+    findCollisions' circle (resultCircles, sounds, collisions, maybeCircles) =
+      case maybeCircles of
+        Just circles ->
+          let
+            collisions' =
+              List.filterMap
+              (\x -> if Circle.collisionTest circle x then Just x else Nothing)
+              circles
+            sounds' = getCollisionSounds circle collisions'
+            circle' =
+              if not (List.isEmpty collisions') || List.member circle collisions then
+                Circle.doCollision circle
+              else
+                circle
+          in
+            ( circle' :: resultCircles
+            , List.append sounds sounds'
+            , List.append collisions collisions'
+            , List.Extra.init circles
+            )
+        Nothing ->
+          let
+            circle' =
+              if List.member circle collisions then
+                Circle.doCollision circle
+              else
+                circle
+          in
+            (circle' :: resultCircles, sounds, [], Nothing)
+    (circles, sounds, _, _) =
+      List.foldr
+      findCollisions'
+      ([], [], [], List.Extra.init model.circles)
+      model.circles
   in
-    { model | circles = circles }
+    { model
+    | circles = circles
+    , sounds = sounds
+    }
+
+
+getCollisionSounds : Circle -> List Circle -> List String
+getCollisionSounds circleA collisions =
+  let
+    getSound circleB =
+      if circleA.radius >= circleB.radius then
+        Circle.sound circleA
+      else
+        Circle.sound circleB
+  in
+    List.map getSound collisions
+
+
+triggerSounds : Model -> (Model, Effects Action)
+triggerSounds model =
+  let
+    sendSound sound =
+      Signal.send sounds.address sound
+      |> Effects.task
+      |> Effects.map (always Noop)
+  in
+    ( { model | sounds = [] }
+    , Effects.batch (List.map sendSound model.sounds)
+    )
+
+
+sounds : Signal.Mailbox String
+sounds = Signal.mailbox ""
+
+
+soundSignal : Signal String
+soundSignal = sounds.signal
+

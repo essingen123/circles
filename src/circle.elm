@@ -6,6 +6,7 @@ module Circle
   , doCollision
   , collisionTest
   , checkForCollisions
+  , sound
   ) where
 
 import List
@@ -49,11 +50,11 @@ newCircle id x y =
 tick : Circle -> Circle
 tick circle =
   let
-    radius = circle.radius +
+    radius = max 0.0 (circle.radius +
       case circle.direction of
         Grow -> growSpeed
-        Shrink -> -growSpeed
-    direction = if radius <= 0.0 then Grow else circle.direction
+        Shrink -> -growSpeed)
+    direction = if radius == 0.0 then Grow else circle.direction
   in
     { circle
     | radius = radius
@@ -85,4 +86,11 @@ distanceBetweenCircles a b =
   Vec2.distance
     { x = toFloat a.x, y = toFloat a.y }
     { x = toFloat b.x, y = toFloat b.y }
+
+
+soundsCount = 8
+
+sound : Circle -> String
+sound circle =
+  "sound-" ++ (toString (circle.id % soundsCount))
 
