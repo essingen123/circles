@@ -92,5 +92,5 @@ soundsCount = 8
 
 sound : Circle -> String
 sound circle =
-  "sound-" ++ (toString (circle.id % soundsCount))
+  "circle sound " ++ (toString (circle.id % soundsCount))
 
