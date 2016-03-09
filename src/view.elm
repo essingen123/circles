@@ -19,7 +19,7 @@ view address model =
     svg
       [ width w, height h, viewBox ("0 0 " ++ w ++ " " ++ h) ]
       ( rect
-          [ fill "#333333"
+          [ fill "#2A4F6E"
           , x "0"
           , y "0"
           , width w
@@ -33,10 +33,10 @@ view address model =
 viewCircle : Address Action -> Circle -> Svg
 viewCircle address circle =
     Svg.circle
-      [ fill "#0ef311"
+      [ fill "#A1BFD8"
       , opacity "0.5"
-      , stroke "#ffffff"
-      , strokeWidth "1.5"
+      , stroke "#567B99"
+      , strokeWidth "1.0"
       , cx (toString circle.x)
       , cy (toString circle.y)
       , r (toString circle.radius)
