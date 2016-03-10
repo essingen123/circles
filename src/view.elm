@@ -7,6 +7,7 @@ import Html exposing (Html, text)
 import Html.Attributes
 import Html.Events exposing (on)
 import Signal exposing (Address)
+import SoundAnimation exposing (SoundAnimation)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (..)
@@ -26,23 +27,40 @@ view address model =
           , height h
           , on "click" getClickPos (Signal.message address << Model.AddCircle)
           ] []
-        :: List.map (viewCircle address) model.circles
+        :: List.concat
+        [ List.map (viewCircle address) model.circles
+        , List.map viewSound model.soundAnimations
+        ]
       )
 
 
 viewCircle : Address Action -> Circle -> Svg
 viewCircle address circle =
-    Svg.circle
-      [ fill "#A1BFD8"
-      , opacity "0.5"
-      , stroke "#567B99"
-      , strokeWidth "1.0"
-      , cx (toString circle.x)
-      , cy (toString circle.y)
-      , r (toString circle.radius)
-      , onClick (Signal.message (Signal.forwardTo address Model.RemoveCircle) circle.id)
-      ]
-      []
+  Svg.circle
+    [ fill "#A1BFD8"
+    , opacity "0.5"
+    , stroke "#567B99"
+    , strokeWidth "1.0"
+    , cx (toString circle.x)
+    , cy (toString circle.y)
+    , r (toString circle.radius)
+    , onClick (Signal.message (Signal.forwardTo address Model.RemoveCircle) circle.id)
+    ]
+    []
+
+
+viewSound : SoundAnimation -> Svg
+viewSound sound =
+  Svg.circle
+    [ fill "none"
+    , opacity (toString sound.alpha)
+    , stroke "#ffffff"
+    , strokeWidth "1.0"
+    , cx (toString sound.x)
+    , cy (toString sound.y)
+    , r (toString sound.radius)
+    ]
+    []
 
 
 getClickPos : Json.Decoder (Int,Int)
