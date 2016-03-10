@@ -6,6 +6,7 @@ var rename = require('gulp-rename');
 var elm = require('gulp-elm');
 var concat = require('gulp-concat-util');
 var audiosprite = require('gulp-audiosprite');
+var sass = require('gulp-sass');
 var ghPages = require('gulp-gh-pages');
 
 gulp.task('elm-init', elm.init);
@@ -20,6 +21,12 @@ gulp.task('lint', function() {
   return gulp.src('src/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
+});
+
+gulp.task('sass', function() {
+  return gulp.src('src/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('build/dist/css'));
 });
 
 gulp.task('sounds:prepare-sprite', function() {
@@ -63,11 +70,12 @@ gulp.task('prepare-html', function() {
     .pipe(gulp.dest('build/dist'));
 });
 
-gulp.task('build', ['prepare-js', 'prepare-html', 'sounds']);
+gulp.task('build', ['prepare-js', 'prepare-html', 'sass', 'sounds']);
 
 gulp.task('watch', ['build'], function() {
   gulp.watch('src/*.elm', ['build']);
   gulp.watch('src/*.js', ['build']);
+  gulp.watch('src/*.scss', ['build']);
 });
 
 gulp.task('deploy', function() {

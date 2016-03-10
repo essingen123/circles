@@ -1,0 +1,37 @@
+$color-background: #2a4f6e;
+$color-a: #a1bfd8;
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.background {
+  fill: $color-background;
+}
+
+@mixin circle($color) {
+  stroke-width: 1.0;
+  opacity: 0.5;
+  fill: $color;
+  stroke: darken($color, 20%);
+
+  transition: fill 0.5s;
+  &:hover {
+    fill: lighten($color, 20%);
+  }
+}
+
+.circle-a {
+  @include circle($color-a);
+}
+
+.sound {
+  fill: none;
+}
+
+.sound-a {
+  @extend .sound;
+  stroke: $color-a;
+}
+
