@@ -12,6 +12,7 @@ import Effects exposing (Effects)
 import List
 import List.Extra
 import Point exposing (Point)
+import SoundAnimation exposing (SoundAnimation)
 
 
 type Action
@@ -27,6 +28,7 @@ type alias Model =
   , nextId : Int
   , dimensions : Point
   , sounds : List String
+  , soundAnimations : List SoundAnimation
   }
 
 
@@ -36,6 +38,7 @@ defaultModel =
   , nextId = 0
   , dimensions = Point.defaultPoint
   , sounds = []
+  , soundAnimations = []
   }
 
 
@@ -77,6 +80,7 @@ tickCircles : Model -> Model
 tickCircles model =
   { model
   | circles = List.map Circle.tick model.circles
+  , soundAnimations = List.filterMap SoundAnimation.tick model.soundAnimations
   }
   |> findCollisions
 
@@ -113,26 +117,28 @@ findCollisions model =
                 circle
           in
             (circle' :: resultCircles, sounds, [], Nothing)
-    (circles, sounds, _, _) =
+    (circles, soundsAndAnimations, _, _) =
       List.foldr
       findCollisions'
       ([], [], [], List.Extra.init model.circles)
       model.circles
+    (sounds, soundAnimations) = List.unzip soundsAndAnimations
   in
     { model
     | circles = circles
     , sounds = sounds
+    , soundAnimations = List.append model.soundAnimations soundAnimations
     }
 
 
-getCollisionSounds : Circle -> List Circle -> List String
+getCollisionSounds : Circle -> List Circle -> List (String, SoundAnimation)
 getCollisionSounds circleA collisions =
   let
     getSound circleB =
-      if circleA.radius >= circleB.radius then
-        Circle.sound circleA
-      else
-        Circle.sound circleB
+      let
+        circle = if circleA.radius >= circleB.radius then circleA else circleB
+      in
+        (Circle.sound circle, SoundAnimation.fromCircle circle)
   in
     List.map getSound collisions
 
