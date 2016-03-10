@@ -20,7 +20,7 @@ view address model =
     svg
       [ width w, height h, viewBox ("0 0 " ++ w ++ " " ++ h) ]
       ( rect
-          [ fill "#2A4F6E"
+          [ class "background"
           , x "0"
           , y "0"
           , width w
@@ -37,10 +37,7 @@ view address model =
 viewCircle : Address Action -> Circle -> Svg
 viewCircle address circle =
   Svg.circle
-    [ fill "#A1BFD8"
-    , opacity "0.5"
-    , stroke "#567B99"
-    , strokeWidth "1.0"
+    [ class "circle-a"
     , cx (toString circle.x)
     , cy (toString circle.y)
     , r (toString circle.radius)
@@ -52,10 +49,8 @@ viewCircle address circle =
 viewSound : SoundAnimation -> Svg
 viewSound sound =
   Svg.circle
-    [ fill "none"
+    [ class "sound-a"
     , opacity (toString sound.alpha)
-    , stroke "#ffffff"
-    , strokeWidth "1.0"
     , cx (toString sound.x)
     , cy (toString sound.y)
     , r (toString sound.radius)
