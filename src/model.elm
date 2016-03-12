@@ -138,7 +138,7 @@ getCollisionSounds circleA collisions =
       let
         circle = if circleA.radius >= circleB.radius then circleA else circleB
       in
-        (Circle.sound circle, SoundAnimation.fromCircle circle)
+        (circle.sound, SoundAnimation.fromCircle circle)
   in
     List.map getSound collisions
 

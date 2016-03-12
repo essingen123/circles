@@ -16,6 +16,7 @@ type alias SoundAnimation =
   , y : Int
   , radius : Float
   , alpha : Float
+  , class : String
   }
 
 
@@ -25,6 +26,7 @@ fromCircle circle =
   , y = circle.y
   , radius = circle.radius
   , alpha = 0.4
+  , class = circle.class.sound
   }
 
 

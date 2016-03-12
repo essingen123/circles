@@ -76,6 +76,7 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('src/*.elm', ['build']);
   gulp.watch('src/*.js', ['build']);
   gulp.watch('src/*.scss', ['build']);
+  gulp.watch('sounds/*.wav', ['build']);
 });
 
 gulp.task('deploy', function() {

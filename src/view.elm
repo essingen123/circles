@@ -37,7 +37,7 @@ view address model =
 viewCircle : Address Action -> Circle -> Svg
 viewCircle address circle =
   Svg.circle
-    [ class "circle-a"
+    [ class circle.class.circle
     , cx (toString circle.x)
     , cy (toString circle.y)
     , r (toString circle.radius)
@@ -49,7 +49,7 @@ viewCircle address circle =
 viewSound : SoundAnimation -> Svg
 viewSound sound =
   Svg.circle
-    [ class "sound-a"
+    [ class sound.class
     , opacity (toString sound.alpha)
     , cx (toString sound.x)
     , cy (toString sound.y)

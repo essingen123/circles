@@ -1,12 +1,12 @@
 module Circle
   ( Circle
+  , Class
   , defaultCircle
   , newCircle
   , tick
   , doCollision
   , collisionTest
   , checkForCollisions
-  , sound
   ) where
 
 import List
@@ -14,12 +14,24 @@ import Vec2
 
 growSpeed = 0.2
 
+type alias Class =
+  { circle : String
+  , sound : String
+  }
+
 type Direction
   = Grow
   | Shrink
 
+type Mode
+  = A
+  | B
+  | C
+
 type alias Circle =
   { id : Int
+  , class : Class
+  , sound : String
   , x : Int
   , y : Int
   , radius : Float
@@ -27,9 +39,12 @@ type alias Circle =
   , collision : Bool
   }
 
+
 defaultCircle : Circle
 defaultCircle =
   { id = 0
+  , class = { circle = "", sound = ""}
+  , sound = ""
   , x = 0
   , y = 0
   , radius = 0
@@ -38,13 +53,35 @@ defaultCircle =
   }
 
 
+soundsCount = 8
+
+
 newCircle : Int -> Int -> Int -> Circle
 newCircle id x y =
-  { defaultCircle
-  | id = id
-  , x = x
-  , y = y
-  }
+  let
+    mode =
+      case id % 3 of
+        0 -> A
+        1 -> B
+        _ -> C
+    modeString =
+      case mode of
+        A -> "a"
+        B -> "b"
+        C -> "c"
+    class =
+      { circle = "circle-" ++ modeString
+      , sound = "sound-" ++ modeString
+      }
+    sound = "circle " ++ modeString ++ " " ++ (toString (id % soundsCount))
+  in
+    { defaultCircle
+    | id = id
+    , x = x
+    , y = y
+    , class = class
+    , sound = sound
+    }
 
 
 tick : Circle -> Circle
@@ -86,11 +123,3 @@ distanceBetweenCircles a b =
   Vec2.distance
     { x = toFloat a.x, y = toFloat a.y }
     { x = toFloat b.x, y = toFloat b.y }
-
-
-soundsCount = 8
-
-sound : Circle -> String
-sound circle =
-  "circle sound " ++ (toString (circle.id % soundsCount))
-
