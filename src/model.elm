@@ -18,6 +18,7 @@ import SoundAnimation exposing (SoundAnimation)
 type Action
   = AddCircle (Int, Int)
   | RemoveCircle Int
+  | SelectCircleType (Circle.Type)
   | Tick Float
   | Dimensions (Int, Int)
   | Noop
@@ -25,6 +26,7 @@ type Action
 
 type alias Model =
   { circles : List Circle
+  , circleType : Circle.Type
   , nextId : Int
   , dimensions : Point
   , sounds : List String
@@ -35,6 +37,7 @@ type alias Model =
 defaultModel : Model
 defaultModel =
   { circles = []
+  , circleType = Circle.A
   , nextId = 0
   , dimensions = Point.defaultPoint
   , sounds = []
@@ -52,6 +55,7 @@ update action model =
   ( case action of
       AddCircle (x, y) -> addCircle (x, y) model
       RemoveCircle id -> removeCircle id model
+      SelectCircleType circleType -> { model | circleType = circleType }
       Tick _ -> tickCircles model
       Dimensions (w, h) -> { model | dimensions = { x = w, y = h } }
       Noop -> model
@@ -61,7 +65,7 @@ update action model =
 addCircle : (Int, Int) -> Model -> Model
 addCircle (x, y) model =
   let
-    circle = Circle.newCircle model.nextId x y
+    circle = Circle.newCircle model.circleType model.nextId x y
   in
     { model
     | circles = circle :: model.circles

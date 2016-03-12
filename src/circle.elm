@@ -1,12 +1,15 @@
 module Circle
   ( Circle
   , Class
+  , Type (..)
   , defaultCircle
   , newCircle
   , tick
   , doCollision
   , collisionTest
   , checkForCollisions
+  , circleTypes
+  , classForType
   ) where
 
 import List
@@ -23,10 +26,15 @@ type Direction
   = Grow
   | Shrink
 
-type Mode
+type Type
   = A
   | B
   | C
+
+
+circleTypes : List Type
+circleTypes = [A, B, C]
+
 
 type alias Circle =
   { id : Int
@@ -56,24 +64,28 @@ defaultCircle =
 soundsCount = 8
 
 
-newCircle : Int -> Int -> Int -> Circle
-newCircle id x y =
+typeString : Type -> String
+typeString circleType =
+  case circleType of
+    A -> "a"
+    B -> "b"
+    C -> "c"
+
+
+classForType : Type -> String
+classForType circleType =
+  "circle-" ++ typeString circleType
+
+
+newCircle : Type -> Int -> Int -> Int -> Circle
+newCircle circleType id x y =
   let
-    mode =
-      case id % 3 of
-        0 -> A
-        1 -> B
-        _ -> C
-    modeString =
-      case mode of
-        A -> "a"
-        B -> "b"
-        C -> "c"
+    typeId = typeString circleType
     class =
-      { circle = "circle-" ++ modeString
-      , sound = "sound-" ++ modeString
+      { circle = "circle-" ++ typeId
+      , sound = "sound-" ++ typeId
       }
-    sound = "circle " ++ modeString ++ " " ++ (toString (id % soundsCount))
+    sound = "circle " ++ typeId ++ " " ++ (toString (id % soundsCount))
   in
     { defaultCircle
     | id = id

@@ -1,4 +1,5 @@
 $color-background: #2a4f6e;
+$color-sidebar: darken($color-background, 10%);
 $color-a: #a1bfd8;
 $color-b: #edd17d;
 $color-c: #ed9e7d;
@@ -12,14 +13,31 @@ body {
   fill: $color-background;
 }
 
+.sidebar {
+  float: left;
+  position: fixed;
+  margin: 10px;
+  width: 110px;
+  background: $color-sidebar;
+}
+
+.circleType {
+  margin: 5px;
+}
+
+.circlesSvg {
+  float: right;
+  width: 100%;
+}
+
 @mixin circle($color) {
   stroke-width: 1.0;
   opacity: 0.5;
   fill: $color;
-  stroke: darken($color, 20%);
+  stroke: darken($color, 10%);
 
   &:hover {
-    fill: lighten($color, 10%);
+    fill: darken($color, 5%);
   }
 }
 
@@ -50,5 +68,10 @@ body {
 
 .sound-c {
   @include sound($color-c);
+}
+
+.selected {
+  stroke-width: 5;
+  stroke: #ffffff;
 }
 
