@@ -1,16 +1,13 @@
 import Effects exposing (Never)
 import Model
-import Primer
 import StartApp
 import Task
 import Time
 import View
-import Window
 
 
 inputSignals =
-  [ Signal.map Model.Dimensions (Primer.prime Window.dimensions)
-  , Signal.map Model.Tick (Time.fps 60)
+  [ Signal.map Model.Tick (Time.fps 60)
   ]
 
 
