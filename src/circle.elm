@@ -9,7 +9,7 @@ module Circle
   , collisionTest
   , checkForCollisions
   , circleTypes
-  , classForType
+  , typeString
   ) where
 
 import List

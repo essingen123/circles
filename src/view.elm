@@ -13,54 +13,61 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (..)
 
+
 view : Address Action -> Model -> Html
 view address model =
+  div [class "main"]
+    [ viewCircles address model
+    , viewBottomBar address model
+    ]
+
+
+viewCircles : Address Action -> Model -> Html
+viewCircles address model =
   let
-    (w, h) = (toString model.dimensions.x, toString model.dimensions.y)
-    background =
+    svgBackground =
       rect
-        [ class "background"
-        , x "0"
-        , y "0"
-        , width w
-        , height h
+        [ class "circles-background"
+        , id "#xxx"
+        , x "0px"
+        , y "0px"
+        , width "100%"
+        , height "100%"
         , on "click" getClickPos (Signal.message address << Model.AddCircle)
-        ] []
+        ]
+        []
     svgElements =
       List.concat
-        [ [background]
+        [ [svgBackground]
         , List.map (viewCircle address) model.circles
         , List.map viewSound model.soundAnimations
         ]
-    circlesSvg =
-      svg [ width w, height h, viewBox ("0 0 " ++ w ++ " " ++ h) ] svgElements
+  in
+    Svg.svg [class "circles-svg"] svgElements
+
+
+viewBottomBar : Address Action -> Model -> Html
+viewBottomBar address model =
+  let
     circleTypeSelectors =
       List.map (viewCircleType address model.circleType) Circle.circleTypes
-    sidebar =
-      div [ class "sidebar" ] circleTypeSelectors
+    selectors =
+      div [ class "selectors" ] circleTypeSelectors
   in
-    div []
-      [ sidebar
-      , div [class "circlesSvg"] [circlesSvg]
-      ]
+    div [ class "bottombar" ] [selectors]
 
 
-viewCircleType : Address Action -> Circle.Type -> Circle.Type -> Svg
+viewCircleType : Address Action -> Circle.Type -> Circle.Type -> Html
 viewCircleType address selectedType circleType =
   let
     selectedClass = if selectedType == circleType then " selected" else ""
+    selectorClass = "selector-" ++ (Circle.typeString circleType)
   in
-    svg [ class "circleType", width "100", height "100" ]
-      [
-      Svg.circle
-        [ class ((Circle.classForType circleType) ++ selectedClass)
-        , cx "50"
-        , cy "50"
-        , r "45"
-        , onClick (Signal.message (Signal.forwardTo address Model.SelectCircleType) circleType)
-        ]
-        []
+    div
+      [ class (selectorClass ++ selectedClass)
+      , onClick (Signal.message (Signal.forwardTo address Model.SelectCircleType) circleType)
       ]
+      []
 
 
 viewCircle : Address Action -> Circle -> Svg
@@ -90,11 +97,5 @@ viewSound sound =
 getClickPos : Json.Decoder (Int,Int)
 getClickPos =
   Json.object2 (,)
-    (Json.object2 (-)
-      (Json.at ["pageX"] Json.int)
-      (Json.at ["target", "offsetLeft"] Json.int)
-    )
-    (Json.object2 (-)
-      (Json.at ["pageY"] Json.int)
-      (Json.at ["target", "offsetTop"] Json.int)
-    )
+    (Json.at ["offsetX"] Json.int)
+    (Json.at ["offsetY"] Json.int)
