@@ -20,7 +20,6 @@ type Action
   | RemoveCircle Int
   | SelectCircleType (Circle.Type)
   | Tick Float
-  | Dimensions (Int, Int)
   | Noop
 
 
@@ -28,7 +27,6 @@ type alias Model =
   { circles : List Circle
   , circleType : Circle.Type
   , nextId : Int
-  , dimensions : Point
   , sounds : List String
   , soundAnimations : List SoundAnimation
   }
@@ -39,7 +37,6 @@ defaultModel =
   { circles = []
   , circleType = Circle.A
   , nextId = 0
-  , dimensions = Point.defaultPoint
   , sounds = []
   , soundAnimations = []
   }
@@ -57,7 +54,6 @@ update action model =
       RemoveCircle id -> removeCircle id model
       SelectCircleType circleType -> { model | circleType = circleType }
       Tick _ -> tickCircles model
-      Dimensions (w, h) -> { model | dimensions = { x = w, y = h } }
       Noop -> model
   ) |> triggerSounds
 
