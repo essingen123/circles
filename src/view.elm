@@ -4,12 +4,12 @@ import Circle exposing (Circle)
 import Graphics.Element exposing (flow, right, show)
 import Json.Decode as Json
 import Model exposing (Model, Action)
-import Html exposing (Html, text, div, img, a)
+import Html exposing (Html, text, div, img, a, span)
 import Html.Attributes exposing (src, href)
 import Html.Events exposing (on)
 import Signal exposing (Address)
 import SoundAnimation exposing (SoundAnimation)
-import Svg exposing (Svg, svg, rect, circle)
+import Svg exposing (Svg, svg, rect, circle, text', tspan)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (..)
 
@@ -45,6 +45,11 @@ viewCircles address model =
     Svg.svg [class "circles-svg"] svgElements
 
 
+infoMessage : String
+infoMessage =
+  "Click somewhere above to get started"
+
+
 viewBottomBar : Address Action -> Model -> Html
 viewBottomBar address model =
   let
@@ -52,6 +57,9 @@ viewBottomBar address model =
       List.map (viewCircleType address model.circleType) Circle.circleTypes
     selectors =
       div [ class "selectors" ] circleTypeSelectors
+    infoHiddenClass = if not (List.isEmpty model.circles) then " hidden" else ""
+    info =
+      div [ class ("info" ++ infoHiddenClass) ] [text infoMessage]
     links =
       div [ class "links" ]
         [ a [ href "https://twitter.com/_hobson_" ]
@@ -62,6 +70,7 @@ viewBottomBar address model =
   in
     div [ class "bottombar" ]
       [ selectors
+      , info
       , links
       ]
 
