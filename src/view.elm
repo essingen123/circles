@@ -4,12 +4,12 @@ import Circle exposing (Circle)
 import Graphics.Element exposing (flow, right, show)
 import Json.Decode as Json
 import Model exposing (Model, Action)
-import Html exposing (Html, text, div)
-import Html.Attributes
+import Html exposing (Html, text, div, img, a)
+import Html.Attributes exposing (src, href)
 import Html.Events exposing (on)
 import Signal exposing (Address)
 import SoundAnimation exposing (SoundAnimation)
-import Svg exposing (..)
+import Svg exposing (Svg, svg, rect, circle)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (..)
 
@@ -52,8 +52,18 @@ viewBottomBar address model =
       List.map (viewCircleType address model.circleType) Circle.circleTypes
     selectors =
       div [ class "selectors" ] circleTypeSelectors
+    links =
+      div [ class "links" ]
+        [ a [ href "https://twitter.com/_hobson_" ]
+            [ img [ class "link", src "images/twitter.svg" ] [] ]
+        , a [ href "https://github.com/irh/circles" ]
+            [ img [ class "link", src "images/github.svg" ] [] ]
+        ]
   in
-    div [ class "bottombar" ] [selectors]
+    div [ class "bottombar" ]
+      [ selectors
+      , links
+      ]
 
 
 viewCircleType : Address Action -> Circle.Type -> Circle.Type -> Html
