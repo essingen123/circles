@@ -4,7 +4,9 @@ $color-circles-background: #8DACDC;
 $color-a: #FEBE54;
 $color-b: #FEF454;
 $color-c: #7642AC;
-$color-selected: #295498;
+
+$color-selector-border: black;
+$selector-size: 20px;
 
 body {
   padding: 0;
@@ -72,8 +74,6 @@ body {
   @include sound($color-c);
 }
 
-$selector-size: 30px;
-
 .bottombar {
   display: flex;
   justify-content: flex-start;
@@ -91,13 +91,17 @@ $selector-size: 30px;
   width: $selector-size;
   height: $selector-size;
   margin-right: 10px;
-  border-radius: 0px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: transparent;
   background: $color;
   cursor: pointer;
 
-  transition: fill 0.5s;
+  transition: border-color 0.2s;
+
+  transition: background 0.5s;
   &:hover {
-    fill: darken($color, 30%);
+    background: darken($color, 20%);
   }
 }
 
@@ -111,4 +115,8 @@ $selector-size: 30px;
 
 .selector-c {
   @include selector($color-c);
+}
+
+.selected {
+  border-color: $color-selector-border;
 }
