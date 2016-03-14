@@ -25,10 +25,10 @@ body {
 }
 
 .circles-svg {
-  background: $color-circles-background;
   width: 100%;
   height: 50%;
   display: block;
+  background: $color-circles-background;
 }
 
 .circles-background {
@@ -77,9 +77,8 @@ body {
 }
 
 .bottombar {
-  display: flex;
-  justify-content: space-between;
   margin-top: $bottom-bar-margin;
+  position: relative;
 }
 
 .selectors {
@@ -87,6 +86,9 @@ body {
   justify-content: center;
   width: auto;
   height: auto;
+  float: left;
+  position: absolute;
+  left:0;
 }
 
 @mixin selector($color) {
@@ -123,9 +125,29 @@ body {
   border-color: $color-selector-border;
 }
 
+.links {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+}
+
 .link {
   width: $selector-size;
   height: $selector-size;
   margin-left: $bottom-bar-margin;
-  fill: grey;
+}
+
+.info {
+  display: inline-block;
+  width: 100%;
+
+  text-align: center;
+  font-size: $selector-size - 2;
+
+  color: grey;
+  transition: color 1.2s;
+}
+
+.hidden {
+  color: transparent;
 }
