@@ -28,7 +28,6 @@ viewCircles address model =
     svgBackground =
       rect
         [ class "circles-background"
-        , id "#xxx"
         , x "0px"
         , y "0px"
         , width "100%"
