@@ -57,6 +57,11 @@ gulp.task('sounds:copy-sounds', ['sounds:prepare-sprite'], function() {
 
 gulp.task('sounds', ['sounds:prepare-js', 'sounds:copy-sounds']);
 
+gulp.task('images', function() {
+  return gulp.src('images/*.svg')
+    .pipe(gulp.dest('build/dist/images'));
+});
+
 gulp.task('prepare-js', ['lint', 'elm-make', 'sounds:prepare-js'], function() {
   return gulp.src(['build/*.js', 'src/*.js'])
     .pipe(concat('circles.js'))
@@ -70,7 +75,7 @@ gulp.task('prepare-html', function() {
     .pipe(gulp.dest('build/dist'));
 });
 
-gulp.task('build', ['prepare-js', 'prepare-html', 'sass', 'sounds']);
+gulp.task('build', ['prepare-js', 'prepare-html', 'sass', 'sounds', 'images']);
 
 gulp.task('watch', ['build'], function() {
   gulp.watch('src/*.elm', ['build']);
