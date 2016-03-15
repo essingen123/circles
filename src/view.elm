@@ -57,7 +57,7 @@ viewBottomBar address model =
       List.map (viewCircleType address model.circleType) Circle.circleTypes
     selectors =
       div [ class "selectors" ] circleTypeSelectors
-    infoHiddenClass = if not (List.isEmpty model.circles) then " hidden" else ""
+    infoHiddenClass = if model.nextId > 0 then " hidden" else ""
     info =
       div [ class ("info" ++ infoHiddenClass) ] [text infoMessage]
     links =
