@@ -11,7 +11,6 @@ import Debug
 import Effects exposing (Effects)
 import List
 import List.Extra
-import Point exposing (Point)
 import SoundAnimation exposing (SoundAnimation)
 
 
