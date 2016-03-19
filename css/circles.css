@@ -117,7 +117,8 @@ body {
 .links {
   display: inline-block;
   position: absolute;
-  right: 0; }
+  right: 0;
+  padding-top: 2px; }
 
 .link {
   width: 20px;
@@ -127,8 +128,10 @@ body {
 .info {
   display: inline-block;
   width: 100%;
+  padding-top: 5px;
   text-align: center;
-  font-size: 18px;
+  font-size: 16px;
+  font-family: Verdana, Arial, sans-serif;
   color: grey;
   transition: color 1.2s; }
 
