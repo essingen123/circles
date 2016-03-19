@@ -129,6 +129,7 @@ body {
   display: inline-block;
   position: absolute;
   right: 0;
+  padding-top: 2px;
 }
 
 .link {
@@ -141,8 +142,10 @@ body {
   display: inline-block;
   width: 100%;
 
+  padding-top: 5px;
   text-align: center;
-  font-size: $selector-size - 2;
+  font-size: $selector-size - 4;
+  font-family: Verdana, Arial, sans-serif;
 
   color: grey;
   transition: color 1.2s;
