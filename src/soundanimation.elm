@@ -1,8 +1,8 @@
-module SoundAnimation
+module SoundAnimation exposing
   ( SoundAnimation
   , fromCircle
   , tick
-  ) where
+  )
 
 import Circle exposing (Circle)
 

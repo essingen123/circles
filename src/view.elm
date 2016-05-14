@@ -1,29 +1,27 @@
-module View where
+module View exposing (view)
 
 import Circle exposing (Circle)
-import Graphics.Element exposing (flow, right, show)
 import Json.Decode as Json
-import Model exposing (Model, Action)
+import Model exposing (Model, Msg)
 import Html exposing (Html, text, div, img, a, span)
 import Html.Attributes exposing (src, href)
 import Html.Events exposing (on)
-import Signal exposing (Address)
 import SoundAnimation exposing (SoundAnimation)
 import Svg exposing (Svg, svg, rect, circle, text', tspan)
 import Svg.Attributes exposing (..)
 import Svg.Events exposing (..)
 
 
-view : Address Action -> Model -> Html
-view address model =
+view : Model -> Html Msg
+view model =
   div [class "main"]
-    [ viewCircles address model
-    , viewBottomBar address model
+    [ viewCircles model
+    , viewBottomBar model
     ]
 
 
-viewCircles : Address Action -> Model -> Html
-viewCircles address model =
+viewCircles : Model -> Html Msg
+viewCircles model =
   let
     svgBackground =
       rect
@@ -32,13 +30,13 @@ viewCircles address model =
         , y "0px"
         , width "100%"
         , height "100%"
-        , on "click" getClickPos (Signal.message address << Model.AddCircle)
+        , on "click" (Json.map Model.AddCircle getClickPos)
         ]
         []
     svgElements =
       List.concat
         [ [svgBackground]
-        , List.map (viewCircle address) model.circles
+        , List.map viewCircle model.circles
         , List.map viewSound model.soundAnimations
         ]
   in
@@ -50,11 +48,11 @@ infoMessage =
   "Click somewhere above to get started"
 
 
-viewBottomBar : Address Action -> Model -> Html
-viewBottomBar address model =
+viewBottomBar : Model -> Html Msg
+viewBottomBar model =
   let
     circleTypeSelectors =
-      List.map (viewCircleType address model.circleType) Circle.circleTypes
+      List.map (viewCircleType model.circleType) Circle.circleTypes
     selectors =
       div [ class "selectors" ] circleTypeSelectors
     infoHiddenClass = if model.nextId > 0 then " hidden" else ""
@@ -75,32 +73,32 @@ viewBottomBar address model =
       ]
 
 
-viewCircleType : Address Action -> Circle.Type -> Circle.Type -> Html
-viewCircleType address selectedType circleType =
+viewCircleType : Circle.Type -> Circle.Type -> Html Msg
+viewCircleType selectedType circleType =
   let
     selectedClass = if selectedType == circleType then " selected" else ""
     selectorClass = "selector-" ++ (Circle.typeString circleType)
   in
     div
       [ class (selectorClass ++ selectedClass)
-      , onClick (Signal.message (Signal.forwardTo address Model.SelectCircleType) circleType)
+      , onClick (Model.SelectCircleType circleType)
       ]
       []
 
 
-viewCircle : Address Action -> Circle -> Svg
-viewCircle address circle =
+viewCircle : Circle -> Svg Msg
+viewCircle circle =
   Svg.circle
     [ class circle.class.circle
     , cx (toString circle.x)
     , cy (toString circle.y)
     , r (toString circle.radius)
-    , onClick (Signal.message (Signal.forwardTo address Model.RemoveCircle) circle.id)
+    , onClick (Model.RemoveCircle circle.id)
     ]
     []
 
 
-viewSound : SoundAnimation -> Svg
+viewSound : SoundAnimation -> Svg Msg
 viewSound sound =
   Svg.circle
     [ class sound.class

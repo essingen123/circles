@@ -1,4 +1,4 @@
-module Vec2 where
+module Vec2 exposing (..)
 
 import Random exposing (Generator, float, map, map2)
 

@@ -1,20 +1,19 @@
-module Model
+module Model exposing
   ( Model
-  , Action (..)
+  , Msg (..)
   , init
   , update
-  , soundSignal
-  ) where
+  )
 
 import Circle exposing (Circle)
 import Debug
-import Effects exposing (Effects)
 import List
 import List.Extra
+import PlaySound
 import SoundAnimation exposing (SoundAnimation)
 
 
-type Action
+type Msg
   = AddCircle (Int, Int)
   | RemoveCircle Int
   | SelectCircleType (Circle.Type)
@@ -41,12 +40,12 @@ defaultModel =
   }
 
 
-init : (Model, Effects Action)
+init : (Model, Cmd Msg)
 init =
-  (defaultModel, Effects.none)
+  (defaultModel, Cmd.none)
 
 
-update : Action -> Model -> (Model, Effects Action)
+update : Msg -> Model -> (Model, Cmd Msg)
 update action model =
   ( case action of
       AddCircle (x, y) -> addCircle (x, y) model
@@ -142,23 +141,10 @@ getCollisionSounds circleA collisions =
     List.map getSound collisions
 
 
-triggerSounds : Model -> (Model, Effects Action)
+triggerSounds : Model -> (Model, Cmd Msg)
 triggerSounds model =
-  let
-    sendSound sound =
-      Signal.send sounds.address sound
-      |> Effects.task
-      |> Effects.map (always Noop)
-  in
-    ( { model | sounds = [] }
-    , Effects.batch (List.map sendSound model.sounds)
-    )
+  ( { model | sounds = [] }
+  , Cmd.batch (List.map (\sound -> PlaySound.playSound sound) model.sounds)
+  )
 
-
-sounds : Signal.Mailbox String
-sounds = Signal.mailbox ""
-
-
-soundSignal : Signal String
-soundSignal = sounds.signal
 

@@ -1,4 +1,4 @@
-module Circle
+module Circle exposing
   ( Circle
   , Class
   , Type (..)
@@ -10,7 +10,7 @@ module Circle
   , checkForCollisions
   , circleTypes
   , typeString
-  ) where
+  )
 
 import List
 import Vec2
