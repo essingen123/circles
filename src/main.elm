@@ -1,5 +1,5 @@
 import Model
-import Html.App as Html
+import Html
 import Time
 import View
 
